@@ -104,8 +104,13 @@ Options:
 
         case -r --random
             if test -d $SCRIPTDIR
-                set -l random_script (random choice (ls -1p $SCRIPTDIR | grep -v '/'))
-                sh $SCRIPTDIR/$random_script
+                set -l random_script_name (random choice (ls -1p $SCRIPTDIR | grep -v '/'))
+                set -l random_script_path "$SCRIPTDIR/$random_script_name"
+                if string match -q -- "*.fish" "$random_script_path"
+                    fish "$random_script_path"
+                else
+                    sh "$random_script_path"
+                end
             else
                 echo "No color scripts directory found at $SCRIPTDIR"
                 return 1
